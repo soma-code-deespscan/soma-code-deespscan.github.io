@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOMA_CODE // HUMAN OS V3.4.0 — The Operating System for Your Body</title>
+  <meta name="description" content="SOMA_CODE ist das weltweit erste geschlossene Betriebssystem für deinen Körper. Neurobiologie trifft KI. Local-First. Keine Cloud. Kein Bullshit." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cyan: '#00E5FF',
+            cyanDark: '#00B8D4',
+            cyanGlow: '#00E5FF33',
+            dark: '#000000',
+            darkCard: '#0A0A0A',
+            darkBorder: '#1A1A1A',
+          },
+          fontFamily: {
+            mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
+            sans: ['"Inter"', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+            'float': 'float 6s ease-in-out infinite',
+            'scan': 'scan 3s linear infinite',
+          },
+          keyframes: {
+            glow: {
+              '0%': { boxShadow: '0 0 5px #00E5FF, 0 0 10px #00E5FF33' },
+              '100%': { boxShadow: '0 0 20px #00E5FF, 0 0 40px #00E5FF33' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-20px)' },
+            },
+            scan: {
+              '0%': { transform: 'translateY(-100%)' },
+              '100%': { transform: 'translateY(100%)' },
+            },
+          },
+        },
+      },
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { background: #000; }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #00E5FF, #FFFFFF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .gradient-text-reverse {
+      background: linear-gradient(135deg, #FFFFFF, #00E5FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .glass-card {
+      background: rgba(10, 10, 10, 0.8);
+      border: 1px solid rgba(0, 229, 255, 0.15);
+      backdrop-filter: blur(20px);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(0, 229, 255, 0.4);
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.1);
+    }
+
+    .glow-border {
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.1), inset 0 0 15px rgba(0, 229, 255, 0.05);
+    }
+
+    .hero-grid {
+      background-image:
+        linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .scan-line {
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00E5FF, transparent);
+      opacity: 0.3;
+    }
+
+    .node-dot {
+      width: 12px;
+      height: 12px;
+      background: #00E5FF;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #00E5FF, 0 0 20px #00E5FF55;
+    }
+
+    .node-dot-sm {
+      width: 8px;
+      height: 8px;
+      background: #00E5FF;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #00E5FF, 0 0 12px #00E5FF44;
+    }
+
+    .spine-line {
+      width: 2px;
+      background: linear-gradient(to bottom, #00E5FF, transparent);
+    }
+
+    @keyframes typewriter {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    .typewriter {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid #00E5FF;
+      animation: typewriter 3s steps(40) forwards, blink 0.75s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      color: #00E5FF;
+      font-size: 20px;
+    }
+
+    .cta-button {
+      background: linear-gradient(135deg, #00E5FF, #00B8D4);
+      color: #000;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .cta-button:hover {
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .cta-button-outline {
+      border: 1px solid #00E5FF;
+      color: #00E5FF;
+      transition: all 0.3s ease;
+    }
+
+    .cta-button-outline:hover {
+      background: rgba(0, 229, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+    }
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.3), transparent);
+    }
+
+    .pillar-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 64px;
+      font-weight: 700;
+      color: rgba(0, 229, 255, 0.08);
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      line-height: 1;
+    }
+
+    .ref-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: rgba(0, 229, 255, 0.4);
+      border: 1px solid rgba(0, 229, 255, 0.15);
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 4px;
+      vertical-align: super;
+      cursor: help;
+    }
+
+    /* Fade-in on scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Staggered reveal for children */
+    .reveal-stagger > * {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal-stagger.visible > *:nth-child(1) { transition-delay: 0.1s; }
+    .reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.2s; }
+    .reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.3s; }
+    .reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.4s; }
+    .reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.5s; }
+    .reveal-stagger.visible > * {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="font-sans text-white antialiased">
+
+  <!-- ============================================================ -->
+  <!-- NAV -->
+  <!-- ============================================================ -->
+  <nav class="fixed top-0 left-0 right-0 z-50 border-b border-darkBorder bg-black/80 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <a href="#" class="font-mono font-bold text-lg tracking-wider">
+        <span class="text-cyan">SOMA</span><span class="text-white/60">_</span><span class="text-white">CODE</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm text-white/60">
+        <a href="#problem" class="hover:text-cyan transition-colors">Problem</a>
+        <a href="#science" class="hover:text-cyan transition-colors">Science</a>
+        <a href="#deep-science" class="hover:text-cyan transition-colors">Deep Science</a>
+        <a href="#features" class="hover:text-cyan transition-colors">Features</a>
+        <a href="#predator" class="hover:text-cyan transition-colors">Predator Mode</a>
+        <a href="#privacy" class="hover:text-cyan transition-colors">Privacy</a>
+        <a href="#references" class="hover:text-cyan transition-colors">Evidenz</a>
+      </div>
+      <a href="#download" class="cta-button px-5 py-2 rounded-lg text-sm font-mono">DOWNLOAD</a>
+    </div>
+  </nav>
+
+  <!-- ============================================================ -->
+  <!-- HERO -->
+  <!-- ============================================================ -->
+  <section class="relative min-h-screen flex items-center justify-center hero-grid overflow-hidden pt-16">
+    <!-- Ambient glow -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-cyan/5 blur-[150px] pointer-events-none"></div>
+    <div class="absolute top-20 right-20 w-[300px] h-[300px] rounded-full bg-cyan/3 blur-[100px] pointer-events-none animate-pulse-slow"></div>
+
+    <div class="relative z-10 max-w-5xl mx-auto px-4 text-center">
+      <!-- System tag -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan/20 bg-cyan/5 mb-8">
+        <span class="w-2 h-2 rounded-full bg-cyan animate-pulse"></span>
+        <span class="font-mono text-xs text-cyan tracking-widest uppercase">HUMAN OS V3.4.0 // SYSTEM ONLINE</span>
+      </div>
+
+      <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[0.95] tracking-tight mb-6">
+        <span class="text-white">The Operating System</span><br/>
+        <span class="gradient-text">for Your Body.</span>
+      </h1>
+
+      <p class="text-lg sm:text-xl text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed">
+        Neurobiologie. KI-Forensik. Somatische Intelligenz.<br/>
+        <span class="text-white/70">Kein Wellness. Kein Esoterik-Bullshit. Dein Betriebssystem.</span>
+      </p>
+
+      <!-- CTA buttons -->
+      <div id="download" class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+        <a href="#" class="cta-button px-8 py-4 rounded-xl text-base font-mono inline-flex items-center gap-3">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          App Store
+        </a>
+        <a href="#" class="cta-button-outline px-8 py-4 rounded-xl text-base font-mono inline-flex items-center gap-3">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.807 1.626a1 1 0 010 1.732l-2.807 1.626L15.206 12l2.492-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/></svg>
+          Google Play
+        </a>
+      </div>
+
+      <!-- Hero visual: Terminal mockup -->
+      <div class="max-w-xl mx-auto glass-card rounded-2xl p-1 animate-glow">
+        <div class="bg-black rounded-xl overflow-hidden">
+          <div class="flex items-center gap-2 px-4 py-3 border-b border-white/5">
+            <span class="w-3 h-3 rounded-full bg-white/10"></span>
+            <span class="w-3 h-3 rounded-full bg-white/10"></span>
+            <span class="w-3 h-3 rounded-full bg-white/10"></span>
+            <span class="font-mono text-xs text-white/30 ml-2">soma_code.terminal</span>
+          </div>
+          <div class="p-6 font-mono text-sm leading-relaxed text-left">
+            <p class="text-white/30">> initializing HUMAN_OS v3.4.0...</p>
+            <p class="text-cyan mt-1">> scanning hardware: <span class="text-white/70">vagus_nerve, fascia_network, mitochondria</span></p>
+            <p class="text-cyan mt-1">> loading kernel: <span class="text-white/70">enneagram_type, bazi_element, chronotype</span></p>
+            <p class="text-cyan mt-1">> calibrating sensors: <span class="text-white/70">EBR_dopamine, HRV_coherence, cortisol_proxy</span></p>
+            <p class="text-white/30 mt-1">> space_weather: <span class="text-cyan">KP 2.3</span> | schumann: <span class="text-cyan">7.83 Hz</span></p>
+            <p class="text-green-400 mt-3">> SYSTEM READY. All modules operational.</p>
+            <p class="text-white/40 mt-1">> awaiting user input...<span class="inline-block w-2 h-4 bg-cyan ml-1 animate-pulse"></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+      <span class="text-white/20 text-xs font-mono tracking-widest">SCROLL</span>
+      <div class="w-5 h-8 rounded-full border border-white/20 flex items-start justify-center p-1">
+        <div class="w-1 h-2 rounded-full bg-cyan animate-bounce"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIVIDER -->
+  <div class="section-divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- PROBLEM / SOLUTION -->
+  <!-- ============================================================ -->
+  <section id="problem" class="py-24 sm:py-32 relative">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal grid md:grid-cols-2 gap-16 items-center">
+        <!-- Left: Problem -->
+        <div>
+          <span class="font-mono text-xs text-cyan/60 tracking-widest uppercase mb-4 block">// SYSTEM_ERROR</span>
+          <h2 class="text-3xl sm:text-4xl font-bold leading-tight mb-6">
+            Entspannung ist <span class="text-cyan">kein</span> Betriebssystem.
+          </h2>
+          <div class="space-y-4 text-white/50 leading-relaxed">
+            <p>
+              Du trackst deinen Schlaf. Du meditierst. Du machst Yoga. Und trotzdem:
+              Brain Fog um 15 Uhr. Unerklärliche Rückenschmerzen. Entscheidungen die sich anfühlen
+              wie Münzwürfe.
+            </p>
+            <p>
+              <span class="text-white/70">Das Problem:</span> Alle Tools optimieren Symptome.
+              Keines versteht dein System.
+            </p>
+            <p>
+              Der Markt ist fragmentiert: HRV-Tracker hier, Meditations-App da,
+              Persönlichkeitstest dort. Isolation löst keine komplexen Systemfehler.
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: Solution -->
+        <div class="glass-card rounded-2xl p-8 relative overflow-hidden">
+          <div class="pillar-number">OS</div>
+          <span class="font-mono text-xs text-cyan tracking-widest uppercase mb-4 block">// SYSTEM_REBOOT</span>
+          <h3 class="text-2xl font-bold mb-4">SOMA_CODE fusioniert alles.</h3>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span class="node-dot mt-1.5 shrink-0"></span>
+              <span class="text-white/70"><span class="text-white font-semibold">NASA/NOAA-Echtzeitdaten</span> — Dein System reagiert auf Space Weather. Wir tracken das.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="node-dot mt-1.5 shrink-0"></span>
+              <span class="text-white/70"><span class="text-white font-semibold">Somatisches Biofeedback</span> — Kamera-basierter Dopamin-Proxy. Keine Wearables.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="node-dot mt-1.5 shrink-0"></span>
+              <span class="text-white/70"><span class="text-white font-semibold">Psychometrische KI</span> — Linguistische Forensik statt Fragebogen.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="node-dot mt-1.5 shrink-0"></span>
+              <span class="text-white/70"><span class="text-white font-semibold">Neuromodulation</span> — 40-Hz Entrainment, Atemkohärenz, akustische Interventionen.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- THE SCIENCE — 4 PILLARS (Overview) -->
+  <!-- ============================================================ -->
+  <section id="science" class="py-24 sm:py-32 relative">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-20 reveal">
+        <span class="font-mono text-xs text-cyan/60 tracking-widest uppercase mb-4 block">// KNOWLEDGE_BASE</span>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold">
+          Die <span class="gradient-text">Wissenschaft</span> dahinter.
+        </h2>
+        <p class="text-white/40 mt-4 max-w-2xl mx-auto">
+          Kein Marketing-Buzzword. Jede Funktion basiert auf peer-reviewed Forschung.
+          Psychoneuroendokrinoimmunologie (PNEI) als Betriebssystem-Architektur.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+
+        <!-- PILLAR 1: Bio-Kybernetik -->
+        <div class="reveal glass-card rounded-2xl p-8 relative overflow-hidden transition-all duration-300">
+          <div class="pillar-number">01</div>
+          <div class="feature-icon mb-6">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Bio-Kybernetik & Hardware-Regulation</h3>
+          <p class="text-white/50 text-sm leading-relaxed mb-4">
+            Dein Nervensystem, Hormone und Immunsystem als kybernetisches Netzwerk.
+            Chronischer Stress drosselt deine Mitochondrien — die Kraftwerke deiner Zellen.
+            <span class="ref-tag" title="McEwen, B.S. (2006): Allostatic Load">McEwen 2006</span>
+          </p>
+          <div class="space-y-2 text-xs font-mono text-white/30">
+            <p><span class="text-cyan/60">></span> Polyvagal-Theorie & autonome Steuerung <span class="ref-tag" title="Porges, S.W. (2011): The Polyvagal Theory">Porges 2011</span></p>
+            <p><span class="text-cyan/60">></span> Mitochondriale allostatische Last <span class="ref-tag" title="Juster, R.P. et al. (2010): Allostatic Load Biomarkers">Juster 2010</span></p>
+            <p><span class="text-cyan/60">></span> Brain-Gut-Achse & Headsche Zonen <span class="ref-tag" title="Freytag (Dissertation): Headsche Zonen">Freytag</span></p>
+            <p><span class="text-cyan/60">></span> Faszien-Routing & Radix Mesenterii <span class="ref-tag" title="Myers, T. (2020): Anatomy Trains">Myers 2020</span></p>
+          </div>
+        </div>
+
+        <!-- PILLAR 2: Neuromodulation -->
+        <div class="reveal glass-card rounded-2xl p-8 relative overflow-hidden transition-all duration-300">
+          <div class="pillar-number">02</div>
+          <div class="feature-icon mb-6">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Neuromodulation ohne Medikamente</h3>
+          <p class="text-white/50 text-sm leading-relaxed mb-4">
+            Wenn dein System übersteuert, reicht Entspannung nicht.
+            Deine Hardware braucht einen physikalischen Reset. Klinisch evaluiert.
+          </p>
+          <div class="space-y-2 text-xs font-mono text-white/30">
+            <p><span class="text-cyan/60">></span> EBR-Dopamin-Sensor (Kamera-Biofeedback)</p>
+            <p><span class="text-cyan/60">></span> 40-Hz Gamma-Entrainment <span class="ref-tag" title="Iaccarino, H.E. et al. (2016): Gamma Entrainment und Mikroglia">Iaccarino 2016</span></p>
+            <p><span class="text-cyan/60">></span> Akustische Resonanz & 528 Hz <span class="ref-tag" title="Akiyama, K. & Sutoo, D. (2011): 528Hz und Cortisol-Senkung">Akiyama 2011</span></p>
+            <p><span class="text-cyan/60">></span> 0.1 Hz kardiorespiratorische Kohärenz <span class="ref-tag" title="Laborde, S. et al. (2017): HRV and Cardiac Vagal Tone">Laborde 2017</span></p>
+          </div>
+        </div>
+
+        <!-- PILLAR 3: Chronobiologie -->
+        <div class="reveal glass-card rounded-2xl p-8 relative overflow-hidden transition-all duration-300">
+          <div class="pillar-number">03</div>
+          <div class="feature-icon mb-6">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Chronobiologie & Space Weather</h3>
+          <p class="text-white/50 text-sm leading-relaxed mb-4">
+            Dein Organismus ist an das elektromagnetische Feld der Erde gekoppelt.
+            SOMA_CODE richtet deine Routinen nach planetaren und genetischen Zyklen aus.
+          </p>
+          <div class="space-y-2 text-xs font-mono text-white/30">
+            <p><span class="text-cyan/60">></span> NASA/NOAA Live-Daten (Kp-Index, Sonnenwinde)</p>
+            <p><span class="text-cyan/60">></span> Schumann-Resonanz (7.83 Hz Baseline)</p>
+            <p><span class="text-cyan/60">></span> Zellautonome Uhren (BMAL1/CLOCK-Gene) <span class="ref-tag" title="Reinberg, A. & Smolensky, M.H. (2006): Biological Rhythms">Reinberg 2006</span></p>
+            <p><span class="text-cyan/60">></span> Lunare Neurotransmitter-Dynamik</p>
+          </div>
+        </div>
+
+        <!-- PILLAR 4: Computational Psychometrics -->
+        <div class="reveal glass-card rounded-2xl p-8 relative overflow-hidden transition-all duration-300">
+          <div class="pillar-number">04</div>
+          <div class="feature-icon mb-6">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Computational Psychometrics</h3>
+          <p class="text-white/50 text-sm leading-relaxed mb-4">
+            Vergiss Multiple-Choice-Tests. Unsere KI analysiert deine Persönlichkeitsstruktur
+            verdeckt aus deinen natürlichen Texteingaben. Kein Barnum-Effekt.
+          </p>
+          <div class="space-y-2 text-xs font-mono text-white/30">
+            <p><span class="text-cyan/60">></span> LMLPA Linguistische Forensik (Big Five)</p>
+            <p><span class="text-cyan/60">></span> Method Triangulation (Psychosomatische Brücke)</p>
+            <p><span class="text-cyan/60">></span> AES-256 verschlüsselt, lokal gespeichert</p>
+            <p><span class="text-cyan/60">></span> Ethische KI — Werkzeug, nicht Meister <span class="ref-tag" title="Barrett, L.F. (2017): How Emotions Are Made">Barrett 2017</span></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- DEEP SCIENCE — 5 Säulen (aus website:science_final.md) -->
+  <!-- ============================================================ -->
+  <section id="deep-science" class="py-24 sm:py-32 relative">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-20 reveal">
+        <span class="font-mono text-xs text-cyan/60 tracking-widest uppercase mb-4 block">// DEEP_SCIENCE</span>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold">
+          Was in deinem <span class="gradient-text">Körper</span> wirklich passiert.
+        </h2>
+        <p class="text-white/40 mt-4 max-w-3xl mx-auto">
+          SOMA_CODE ist keine Wellness-App und keine klassische Meditation. Es ist angewandte Bio-Kybernetik.
+          Unsere Architektur zur System-Regulation basiert auf modernster Neurobiologie,
+          Computational Psychiatry und klinisch validierten Interventionsprotokollen.
+        </p>
+      </div>
+
+      <!-- SÄULE 1: Computational Psychiatry -->
+      <div class="reveal mb-12">
+        <div class="glass-card rounded-2xl p-8 md:p-10 relative overflow-hidden">
+          <div class="pillar-number">S1</div>
+          <div class="flex items-start gap-4 mb-6">
+            <div class="feature-icon shrink-0">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"/></svg>
+            </div>
+            <div>
+              <h3 class="text-xl md:text-2xl font-bold mb-1">Computational Psychiatry</h3>
+              <p class="text-cyan/60 text-xs font-mono">Angst ist ein Software-Bug — kein Charakterfehler</p>
+            </div>
+          </div>
+          <div class="md:grid md:grid-cols-2 gap-8">
+            <div>
+              <p class="text-white/60 text-sm leading-relaxed mb-4">
+                Basierend auf dem Modell des <span class="text-white font-semibold">Predictive Coding</span> arbeitet
+                dein Gehirn wie eine Vorhersagemaschine. Es wartet nicht auf Reize, sondern simuliert ständig die Zukunft.
+                Pathologische Angst oder chronischer Stress sind neurobiologisch oft reine
+                <span class="text-cyan">"Berechnungsfehler"</span> (Prediction Errors).
+                <span class="ref-tag" title="Seth, A.K. (2013): Interoceptive Inference, Emotion and the Embodied Self">Seth 2013</span>
+              </p>
+              <p class="text-white/60 text-sm leading-relaxed">
+                Dein Gehirn interpretiert harmlose Hardware-Signale deines Körpers fälschlicherweise als lebensbedrohlich.
+                SOMA_CODE nutzt gezieltes <span class="text-white font-semibold">Interozeptives Biofeedback</span>,
+                um diese fehlerhaften Bedrohungsvorhersagen mit sicheren Sensor-Beweisen zu überschreiben.
+                <span class="ref-tag" title="Barrett, L.F. (2017): How Emotions Are Made">Barrett 2017</span>
+              </p>
+            </div>
+            <div class="mt-6 md:mt-0 glass-card rounded-xl p-5 bg-black/40">
+              <p class="font-mono text-xs text-cyan/40 mb-3">// SYSTEM_LOGIC</p>
+              <div class="space-y-3 text-xs font-mono">
+                <p class="text-white/40"><span class="text-cyan">></span> Emotion = allostatischer Vorhersage-Fehler</p>
+                <p class="text-white/40"><span class="text-cyan">></span> Viszerale Hardware-Daten (z.B. Glukosemangel)</p>
+                <p class="text-white/40"><span class="text-cyan">></span> Gehirn liest fehlerhafte Daten als "Gefahr"</p>
+                <p class="text-white/40"><span class="text-cyan">></span> SOMA_CODE Coaching-Frage:</p>
+                <p class="text-cyan/70 pl-4">"Meldet dein System wirklich Angst, oder berechnet dein Sensor gerade ein Energie-Defizit?"</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SÄULE 2: Cranial Master Valve -->
+      <div class="reveal mb-12">
+        <div class="glass-card rounded-2xl p-8 md:p-10 relative overflow-hidden">
+          <div class="pillar-number">S2</div>
+          <div class="flex items-start gap-4 mb-6">
+            <div class="feature-icon shrink-0">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+            <div>
+              <h3 class="text-xl md:text-2xl font-bold mb-1">Das Cranial Master Valve</h3>
+              <p class="text-cyan/60 text-xs font-mono">Warum Entspannung bei dir blockiert ist</p>
+            </div>
+          </div>
+          <div class="md:grid md:grid-cols-2 gap-8">
+            <div>
+              <p class="text-white/60 text-sm leading-relaxed mb-4">
+                Chronischer Stress führt zu unbewusstem <span class="text-white font-semibold">Zähneknirschen (Bruxismus)</span>.
+                Der extreme mechanische Druck im Kiefergelenk reizt das Ganglion Gasseri und löst den paradoxen
+                <span class="text-cyan">Trigeminokardialen Reflex (TCR)</span> aus.
+                Dieser würgt deinen Vagusnerv buchstäblich ab und zwingt dein System in einen ständigen
+                Sympathikus-Overdrive.
+              </p>
+              <p class="text-white/60 text-sm leading-relaxed">
+                Geht dieser Stress in eine als ausweglos empfundene Situation über, aktiviert dein System den
+                <span class="text-white font-semibold">Dorsalen Vagus-Shutdown</span> — den Totstellreflex.
+                Die Verdauung parasiert, das System friert ein. SOMA_CODE nutzt kraniale
+                Biometrie-Protokolle, um dieses "Hauptventil" mechanisch zu entkoppeln.
+                <span class="ref-tag" title="Porges, S.W. (2011): The Polyvagal Theory">Porges 2011</span>
+              </p>
+            </div>
+            <div class="mt-6 md:mt-0">
+              <!-- Polyvagal States -->
+              <div class="space-y-3">
+                <div class="glass-card rounded-lg p-4 bg-black/40">
+                  <div class="flex items-center gap-3 mb-2">
+                    <span class="w-3 h-3 rounded-full bg-green-400 shrink-0"></span>
+                    <span class="text-xs font-mono text-green-400">VENTRAL VAGAL</span>
+                  </div>
+                  <p class="text-white/40 text-xs">Sicherheit. Social Engagement. Ruhe. <span class="text-white/60">SOMA_CODE: FLOW</span></p>
+                </div>
+                <div class="glass-card rounded-lg p-4 bg-black/40">
+                  <div class="flex items-center gap-3 mb-2">
+                    <span class="w-3 h-3 rounded-full bg-orange-400 shrink-0"></span>
+                    <span class="text-xs font-mono text-orange-400">SYMPATHIKUS</span>
+                  </div>
+                  <p class="text-white/40 text-xs">Gefahr. Fight / Flight. Adrenalin. <span class="text-white/60">SOMA_CODE: ALERT</span></p>
+                </div>
+                <div class="glass-card rounded-lg p-4 bg-black/40">
+                  <div class="flex items-center gap-3 mb-2">
+                    <span class="w-3 h-3 rounded-full bg-cyan shrink-0"></span>
+                    <span class="text-xs font-mono text-cyan">DORSAL VAGAL</span>
+                  </div>
+                  <p class="text-white/40 text-xs">Lebensbedrohung. Freeze / Shutdown. <span class="text-white/60">SOMA_CODE: EMERGENCY</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SÄULE 3: High-Speed-Datenleitung -->
+      <div class="reveal mb-12">
+        <div class="glass-card rounded-2xl p-8 md:p-10 relative overflow-hidden">
+          <div class="pillar-number">S3</div>
+          <div class="flex items-start gap-4 mb-6">
+            <div class="feature-icon shrink-0">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"/></svg>
+            </div>
+            <div>
+              <h3 class="text-xl md:text-2xl font-bold mb-1">Die High-Speed-Datenleitung</h3>
+              <p class="text-cyan/60 text-xs font-mono">Neuropod-Zellen, Mikrobiom & die Brain-Gut-Achse</p>
+            </div>
+          </div>
+          <p class="text-white/60 text-sm leading-relaxed mb-4">
+            Diffuse Ängste, "Brain Fog" und Erschöpfung sind oft <span class="text-white font-semibold">Hardware-Schaden
+            in der Darm-Hirn-Achse</span>. Sogenannte "Neuropod-Zellen" im Darm haben direkte synaptische Verbindungen
+            zum Vagusnerv und funken Systemdaten in Millisekunden an dein Gehirn.
+            <span class="ref-tag" title="Cryan, J.F. & Dinan, T.G. (2012): Mind-Altering Microorganisms">Cryan 2012</span>
+          </p>
+          <p class="text-white/60 text-sm leading-relaxed mb-6">
+            Wenn orale Bakterien (z.B. aus entzündetem Zahnfleisch) die Magensäure-Barriere durchbrechen und das
+            Mikrobiom zerschießen (<span class="text-cyan">Leaky Gut</span>), funkt der Darm permanente "Danger-Signale" nach oben.
+            Dein Gehirn liest diese fehlerhaften viszeralen Daten und konstruiert daraus das Gefühl von Panik,
+            Depression oder Brain Fog. SOMA_CODE dichtet diesen System-Leak durch die Reaktivierung des
+            <span class="text-white font-semibold">cholinergen anti-inflammatorischen Signalwegs</span> ab.
+            <span class="ref-tag" title="Mayer, E.A. (2011): Gut Feelings">Mayer 2011</span>
+          </p>
+          <div class="grid sm:grid-cols-3 gap-4">
+            <div class="glass-card rounded-lg p-4 bg-black/40 text-center">
+              <p class="text-cyan font-mono text-2xl font-bold mb-1">80%</p>
+              <p class="text-white/30 text-xs">des Vagusnervs sind afferente Sensordaten (Darm → Gehirn)</p>
+            </div>
+            <div class="glass-card rounded-lg p-4 bg-black/40 text-center">
+              <p class="text-cyan font-mono text-2xl font-bold mb-1">ms</p>
+              <p class="text-white/30 text-xs">Neuropod-Zellen funken in Millisekunden ans Gehirn</p>
+            </div>
+            <div class="glass-card rounded-lg p-4 bg-black/40 text-center">
+              <p class="text-cyan font-mono text-2xl font-bold mb-1">10<sup>14</sup></p>
+              <p class="text-white/30 text-xs">Mikroorganismen im Darm — mehr als deine Körper-Zellen</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SÄULE 4: Bio-Tensegrity -->
+      <div class="reveal mb-12">
+        <div class="glass-card rounded-2xl p-8 md:p-10 relative overflow-hidden">
+          <div class="pillar-number">S4</div>
+          <div class="flex items-start gap-4 mb-6">
+            <div class="feature-icon shrink-0">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+            </div>
+            <div>
+              <h3 class="text-xl md:text-2xl font-bold mb-1">Bio-Tensegrity & System-Statik</h3>
+              <p class="text-cyan/60 text-xs font-mono">Der Intraabdominelle Druck & die Tiefe Frontallinie</p>
+            </div>
+          </div>
+          <p class="text-white/60 text-sm leading-relaxed mb-4">
+            Kieferschmerzen und Lendenwirbelprobleme treten fast immer gemeinsam auf. Kiefer und Beckenboden
+            sind über ein massives Faszien-Kabel, die <span class="text-cyan">"Tiefe Frontallinie"</span>,
+            miteinander verschaltet.
+            <span class="ref-tag" title="Myers, T. (2020): Anatomy Trains (Deep Front Line)">Myers 2020</span>
+          </p>
+          <p class="text-white/60 text-sm leading-relaxed mb-6">
+            Wenn der Intraabdominelle Druck (IAP) im Bauchraum durch Stress oder flache Atmung
+            deine individuelle Kapazität überschreitet, überhitzt das Fundament (Beckenboden),
+            und die Spannung zieht bis in den Nacken. Kognitive Dissonanz erhöht die HWS-Last messbar um
+            <span class="text-cyan font-semibold">+11.1%</span>.
+            <span class="ref-tag" title="Weston et al. (2023): Kognitive Dissonanz und HWS-Last">Weston 2023</span>
+          </p>
+          <div class="glass-card rounded-lg p-5 bg-black/40">
+            <p class="font-mono text-xs text-cyan/40 mb-3">// FASZIEN-ROUTING</p>
+            <div class="flex items-center gap-3 flex-wrap">
+              <span class="glass-card rounded px-3 py-1.5 text-xs text-white/50">Kiefer (TMJ)</span>
+              <span class="text-cyan/40">→</span>
+              <span class="glass-card rounded px-3 py-1.5 text-xs text-white/50">Zwerchfell</span>
+              <span class="text-cyan/40">→</span>
+              <span class="glass-card rounded px-3 py-1.5 text-xs text-white/50">Psoas (L1-L3)</span>
+              <span class="text-cyan/40">→</span>
+              <span class="glass-card rounded px-3 py-1.5 text-xs text-white/50">Beckenboden</span>
+            </div>
+            <p class="text-white/30 text-xs mt-3">Deep Front Line — biomechanische Zwangskopplung über die gesamte Körperachse</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SÄULE 5: Gate-Control & Neuromodulation -->
+      <div class="reveal mb-12">
+        <div class="glass-card rounded-2xl p-8 md:p-10 relative overflow-hidden">
+          <div class="pillar-number">S5</div>
+          <div class="flex items-start gap-4 mb-6">
+            <div class="feature-icon shrink-0">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/></svg>
+            </div>
+            <div>
+              <h3 class="text-xl md:text-2xl font-bold mb-1">Gate-Control & Akustische Neuromodulation</h3>
+              <p class="text-cyan/60 text-xs font-mono">Schmerzhemmung durch physikalische Interventionen</p>
+            </div>
+          </div>
+          <p class="text-white/60 text-sm leading-relaxed mb-4">
+            Chronischer Schmerz ist oft eine <span class="text-white font-semibold">neuronale Fehlanpassung</span> —
+            nicht ein Gewebeschaden. Die Gate-Control-Theorie zeigt: Mechanorezeptoren können Schmerzsignale
+            im Rückenmark physisch blockieren. GABAerge Interneurone im Dorsalhorn hemmen die Nozizeption.
+            <span class="ref-tag" title="Melzack, R. & Wall, P.D. (1965): Pain Mechanisms: A New Theory">Melzack & Wall 1965</span>
+          </p>
+          <p class="text-white/60 text-sm leading-relaxed mb-6">
+            SOMA_CODE integriert akustische Neuromodulation — von 528 Hz Cortisol-Senkung bis
+            40-Hz Gamma-Entrainment. Letzteres aktiviert <span class="text-cyan">Parvalbumin-Interneurone</span>
+            und löst eine Mikroglia-Transformation aus (pro-inflammatorisch → reparativ),
+            die das glymphatische System flutet.
+            <span class="ref-tag" title="Martorell, A.J. et al. (2019): Multi-Sensory Gamma Stimulation">Martorell 2019</span>
+          </p>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="glass-card rounded-lg p-4 bg-black/40">
+              <p class="font-mono text-xs text-cyan/40 mb-3">// FREQUENZ-PROTOKOLLE</p>
+              <div class="space-y-2 text-xs text-white/40">
+                <div class="flex justify-between"><span>432 Hz — Erdung</span><span class="text-cyan/50">10-15 Min</span></div>
+                <div class="flex justify-between"><span>528 Hz — Cortisol-Senkung</span><span class="text-cyan/50">5 Min</span></div>
+                <div class="flex justify-between"><span>40 Hz Gamma — Fokus</span><span class="text-cyan/50">10 Min</span></div>
+                <div class="flex justify-between"><span>10 Hz Alpha — Entspannung</span><span class="text-cyan/50">6-10 Min</span></div>
+              </div>
+            </div>
+            <div class="glass-card rounded-lg p-4 bg-black/40">
+              <p class="font-mono text-xs text-cyan/40 mb-3">// INTERVENTIONS-KETTE</p>
+              <div class="space-y-2 text-xs text-white/40">
+                <p><span class="text-cyan">1.</span> Interozeption — Fokus auf Hardware-Signal</p>
+                <p><span class="text-cyan">2.</span> Mechanik — Zwerchfellatmung (Biofeedback)</p>
+                <p><span class="text-cyan">3.</span> Neuro-Modulation — GABAerge Hemmung</p>
+                <p><span class="text-cyan">4.</span> Integration — System-Reset bestätigen</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- FEATURES — 5 Module -->
+  <!-- ============================================================ -->
+  <section id="features" class="py-24 sm:py-32 relative">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-20 reveal">
+        <span class="font-mono text-xs text-cyan/60 tracking-widest uppercase mb-4 block">// MODULE_REGISTRY</span>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold">
+          5 Module. <span class="gradient-text">1 System.</span>
+        </h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6 reveal">
+        <!-- NAVI -->
+        <div class="glass-card rounded-xl p-6 text-center group hover:scale-105 transition-transform duration-300">
+          <div class="w-12 h-12 mx-auto mb-4 rounded-xl bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan font-mono font-bold text-lg group-hover:bg-cyan/20 transition-colors">N</div>
+          <h4 class="font-bold text-sm mb-2">NAVI</h4>
+          <p class="text-white/40 text-xs leading-relaxed">Daily System-Scan. Kalibrierung. Dein tägliches Lagebild mit KI-generierten Mandaten.</p>
+        </div>
+        <!-- CODE -->
+        <div class="glass-card rounded-xl p-6 text-center group hover:scale-105 transition-transform duration-300">
+          <div class="w-12 h-12 mx-auto mb-4 rounded-xl bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan font-mono font-bold text-lg group-hover:bg-cyan/20 transition-colors">C</div>
+          <h4 class="font-bold text-sm mb-2">CODE</h4>
+          <p class="text-white/40 text-xs leading-relaxed">Dein Dashboard. Biorhythmus, Numerologie, Enneagramm — alle System-Specs auf einen Blick.</p>
+        </div>
+        <!-- SYSTEM -->
+        <div class="glass-card rounded-xl p-6 text-center group hover:scale-105 transition-transform duration-300">
+          <div class="w-12 h-12 mx-auto mb-4 rounded-xl bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan font-mono font-bold text-lg group-hover:bg-cyan/20 transition-colors">S</div>
+          <h4 class="font-bold text-sm mb-2">SYSTEM</h4>
+          <p class="text-white/40 text-xs leading-relaxed">3D-Symptom-Mapping. Deep Scan. Faszien-Routing. Headsche Zonen. Der Körper als Interface.</p>
+        </div>
+        <!-- RITUALS -->
+        <div class="glass-card rounded-xl p-6 text-center group hover:scale-105 transition-transform duration-300">
+          <div class="w-12 h-12 mx-auto mb-4 rounded-xl bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan font-mono font-bold text-lg group-hover:bg-cyan/20 transition-colors">R</div>
+          <h4 class="font-bold text-sm mb-2">RITUALS</h4>
+          <p class="text-white/40 text-xs leading-relaxed">Neuromodulation. Atemkohärenz. Gamma-Entrainment. Akustische Interventionen. Dein Hardware-Reset.</p>
+        </div>
+        <!-- CAREER -->
+        <div class="glass-card rounded-xl p-6 text-center group hover:scale-105 transition-transform duration-300">
+          <div class="w-12 h-12 mx-auto mb-4 rounded-xl bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan font-mono font-bold text-lg group-hover:bg-cyan/20 transition-colors">K</div>
+          <h4 class="font-bold text-sm mb-2">CAREER</h4>
+          <p class="text-white/40 text-xs leading-relaxed">KI-Coaching das dich KENNT. Persona Engine. Sprach-Fingerabdruck. Kein generischer Chatbot.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- PREDATOR MODE -->
+  <!-- ============================================================ -->
+  <section id="predator" class="py-24 sm:py-32 relative overflow-hidden">
+    <!-- Background accent -->
+    <div class="absolute top-0 left-0 w-full h-full">
+      <div class="absolute top-1/2 left-1/4 w-[500px] h-[500px] rounded-full bg-cyan/3 blur-[150px] pointer-events-none"></div>
+    </div>
+
+    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal grid md:grid-cols-2 gap-16 items-center">
+        <!-- Left: Copy -->
+        <div>
+          <span class="font-mono text-xs text-cyan/60 tracking-widest uppercase mb-4 block">// PREDATOR_MODE</span>
+          <h2 class="text-3xl sm:text-4xl font-bold leading-tight mb-6">
+            Das ist <span class="text-cyan">keine</span><br/>Wellness-App.
+          </h2>
+          <div class="space-y-4 text-white/50 leading-relaxed">
+            <p>
+              SOMA_CODE hat die No-Excuses-Haltung eines Elite-Coaches.
+              Unser Predator-Modus durchschaut Ausreden und konfrontiert dich
+              mit harten Fakten statt toxischer Positivität.
+            </p>
+            <p class="text-white/70">
+              Wenn dein System übersteuert, sagt dir die KI nicht "Ruh dich aus".
+              Sie liefert die ungeschonte System-Wahrheit.
+            </p>
+          </div>
+
+          <!-- Persona Engine visual -->
+          <div class="mt-8 space-y-3">
+            <div class="flex items-center gap-3 glass-card rounded-lg p-3">
+              <span class="w-3 h-3 rounded-full bg-green-400 shrink-0"></span>
+              <div>
+                <span class="text-xs font-mono text-green-400">MENTOR</span>
+                <span class="text-xs text-white/40 ml-2">Stress &le; 3 — Visionär, strategisch</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 glass-card rounded-lg p-3">
+              <span class="w-3 h-3 rounded-full bg-orange-400 shrink-0"></span>
+              <div>
+                <span class="text-xs font-mono text-orange-400">SPARRINGSPARTNER</span>
+                <span class="text-xs text-white/40 ml-2">Stress 4-6 — Fordernd, direkt</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 glass-card rounded-lg p-3">
+              <span class="w-3 h-3 rounded-full bg-cyan shrink-0"></span>
+              <div>
+                <span class="text-xs font-mono text-cyan">SYSTEM_OVERRIDE</span>
+                <span class="text-xs text-white/40 ml-2">Stress &ge; 7 — Drill-Instructor, max 2 Sätze</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Chat mockup -->
+        <div class="glass-card rounded-2xl overflow-hidden">
+          <div class="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-black/50">
+            <span class="w-2 h-2 rounded-full bg-cyan animate-pulse"></span>
+            <span class="font-mono text-xs text-white/40">career_coaching.session</span>
+          </div>
+          <div class="p-6 space-y-4">
+            <!-- User message -->
+            <div class="flex justify-end">
+              <div class="bg-white/5 rounded-2xl rounded-br-md px-4 py-3 max-w-[80%]">
+                <p class="text-sm text-white/70">Ich bin einfach zu müde für alles. Vielleicht bin ich nicht dafür gemacht.</p>
+              </div>
+            </div>
+            <!-- AI response -->
+            <div class="flex justify-start">
+              <div class="bg-cyan/10 border border-cyan/20 rounded-2xl rounded-bl-md px-4 py-3 max-w-[80%]">
+                <p class="text-sm text-white/80">
+                  <span class="text-cyan font-mono text-xs block mb-1">[SYSTEM_OVERRIDE]</span>
+                  Dein Stress-Level liegt bei 7. Dein Körper sendet ein Hardware-Signal — das ist kein Mindset-Problem. Bevor wir über Karriere reden: Wann hast du zuletzt 7+ Stunden geschlafen?
+                </p>
+              </div>
+            </div>
+            <!-- User -->
+            <div class="flex justify-end">
+              <div class="bg-white/5 rounded-2xl rounded-br-md px-4 py-3 max-w-[80%]">
+                <p class="text-sm text-white/70">...schon lange nicht mehr.</p>
+              </div>
+            </div>
+            <!-- AI -->
+            <div class="flex justify-start">
+              <div class="bg-cyan/10 border border-cyan/20 rounded-2xl rounded-bl-md px-4 py-3 max-w-[80%]">
+                <p class="text-sm text-white/80">
+                  Dann ist das dein erster Auftrag. Nicht Karriere. Schlaf. Bio überschreibt Psycho. Immer. Wir reden morgen weiter.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- DATA SOVEREIGNTY -->
+  <!-- ============================================================ -->
+  <section id="privacy" class="py-24 sm:py-32 relative">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="reveal">
+        <span class="font-mono text-xs text-cyan/60 tracking-widest uppercase mb-4 block">// DATA_SOVEREIGNTY</span>
+        <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+          Deine Daten. <span class="gradient-text">Dein Gerät.</span> Punkt.
+        </h2>
+        <p class="text-white/50 max-w-2xl mx-auto mb-12 leading-relaxed">
+          SOMA_CODE operiert Local-First. Die gesamte Datenbank wird lokal mit
+          AES-256 (SQLCipher) verschlüsselt auf deinem Smartphone gespeichert.
+          Kein Cloud-Sync. Keine Server. Keine Kompromisse.
+        </p>
+
+        <div class="grid sm:grid-cols-3 gap-6">
+          <div class="glass-card rounded-xl p-6">
+            <div class="text-3xl mb-3">
+              <svg class="w-8 h-8 mx-auto text-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+            </div>
+            <h4 class="font-bold text-sm mb-2">AES-256 Encryption</h4>
+            <p class="text-white/40 text-xs">Militärstandard-Verschlüsselung. Dein Schlüssel verlässt nie dein Gerät.</p>
+          </div>
+          <div class="glass-card rounded-xl p-6">
+            <div class="text-3xl mb-3">
+              <svg class="w-8 h-8 mx-auto text-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z"/><path stroke-linecap="round" stroke-linejoin="round" d="M18.75 12.75l-6-6-6 6"/></svg>
+            </div>
+            <h4 class="font-bold text-sm mb-2">Zero Cloud</h4>
+            <p class="text-white/40 text-xs">Kein Upload. Kein Sync. Deine biometrischen Daten existieren nur auf deinem Gerät.</p>
+          </div>
+          <div class="glass-card rounded-xl p-6">
+            <div class="text-3xl mb-3">
+              <svg class="w-8 h-8 mx-auto text-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+            </div>
+            <h4 class="font-bold text-sm mb-2">Privacy Bridge</h4>
+            <p class="text-white/40 text-xs">Die KI bekommt nur anonymisierte Daten. Kein Name, kein Ort, kein Geburtsdatum.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- EVIDENZ & REFERENZEN (Modular erweiterbar) -->
+  <!-- ============================================================ -->
+  <section id="references" class="py-24 sm:py-32 relative">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 reveal">
+        <span class="font-mono text-xs text-cyan/60 tracking-widest uppercase mb-4 block">// EVIDENCE_BASE</span>
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">
+          Peer-Reviewed. <span class="gradient-text">Nicht Marketing.</span>
+        </h2>
+        <p class="text-white/40 mt-4 max-w-2xl mx-auto">
+          Jede Funktion von SOMA_CODE basiert auf wissenschaftlicher Forschung.
+          Hier sind die Kernreferenzen — transparent und überprüfbar.
+        </p>
+      </div>
+
+      <div class="reveal grid md:grid-cols-2 gap-6">
+
+        <!-- Kategorie: Neurobiologie -->
+        <div class="glass-card rounded-xl p-6">
+          <h4 class="font-mono text-xs text-cyan tracking-widest uppercase mb-4">Neurobiologie & Polyvagal-Theorie</h4>
+          <ul class="space-y-3 text-xs text-white/40 leading-relaxed">
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Porges, S.W. (2011): <span class="text-white/60">The Polyvagal Theory.</span> W.W. Norton & Company.</span>
+            </li>
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Barrett, L.F. (2017): <span class="text-white/60">How Emotions Are Made.</span> Houghton Mifflin Harcourt.</span>
+            </li>
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Seth, A.K. (2013): <span class="text-white/60">Interoceptive Inference, Emotion and the Embodied Self.</span> Trends in Cognitive Sciences.</span>
+            </li>
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>McEwen, B.S. (2006): <span class="text-white/60">Protective and Damaging Effects of Stress Mediators: Allostatic Load.</span> NEJM.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Kategorie: Schmerz & Gate-Control -->
+        <div class="glass-card rounded-xl p-6">
+          <h4 class="font-mono text-xs text-cyan tracking-widest uppercase mb-4">Schmerz & Gate-Control</h4>
+          <ul class="space-y-3 text-xs text-white/40 leading-relaxed">
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Melzack, R. & Wall, P.D. (1965): <span class="text-white/60">Pain Mechanisms: A New Theory.</span> Science, 150(3699).</span>
+            </li>
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Weston et al. (2023): <span class="text-white/60">Kognitive Dissonanz und HWS-Last (+11.1%).</span></span>
+            </li>
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Myers, T. (2020): <span class="text-white/60">Anatomy Trains — Myofasziale Leitbahnen.</span> Urban & Fischer.</span>
+            </li>
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Barral, J.P. (2005): <span class="text-white/60">Visceral Manipulation.</span> Eastland Press.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Kategorie: Neuromodulation -->
+        <div class="glass-card rounded-xl p-6">
+          <h4 class="font-mono text-xs text-cyan tracking-widest uppercase mb-4">Neuromodulation & Frequenz</h4>
+          <ul class="space-y-3 text-xs text-white/40 leading-relaxed">
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Iaccarino, H.E. et al. (2016): <span class="text-white/60">Gamma Frequency Entrainment Attenuates Amyloid Load.</span> Nature, 540.</span>
+            </li>
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Martorell, A.J. et al. (2019): <span class="text-white/60">Multi-sensory Gamma Stimulation.</span> Cell, 177(2).</span>
+            </li>
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Akiyama, K. & Sutoo, D. (2011): <span class="text-white/60">Effect of 528 Hz Music on Cortisol Levels.</span></span>
+            </li>
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Wahbeh, H. et al. (2007): <span class="text-white/60">Binaural Beat Technology and Anxiety.</span> Alternative Therapies.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Kategorie: Mikrobiom & Chronobiologie -->
+        <div class="glass-card rounded-xl p-6">
+          <h4 class="font-mono text-xs text-cyan tracking-widest uppercase mb-4">Mikrobiom & Chronobiologie</h4>
+          <ul class="space-y-3 text-xs text-white/40 leading-relaxed">
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Cryan, J.F. & Dinan, T.G. (2012): <span class="text-white/60">Mind-Altering Microorganisms.</span> Nature Reviews Neuroscience.</span>
+            </li>
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Mayer, E.A. (2011): <span class="text-white/60">Gut Feelings: The Emerging Biology of Gut-Brain Communication.</span></span>
+            </li>
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Reinberg, A. & Smolensky, M.H. (2006): <span class="text-white/60">Biological Rhythms and Medicine.</span> Springer.</span>
+            </li>
+            <li class="flex gap-2">
+              <span class="node-dot-sm mt-1 shrink-0"></span>
+              <span>Laborde, S. et al. (2017): <span class="text-white/60">Heart Rate Variability and Cardiac Vagal Tone.</span> Frontiers in Psychology.</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Future Research Teaser -->
+      <div class="reveal mt-12">
+        <div class="glass-card rounded-2xl p-8 text-center relative overflow-hidden">
+          <div class="pillar-number">R&D</div>
+          <span class="font-mono text-xs text-cyan/60 tracking-widest uppercase mb-4 block">// COMING_SOON</span>
+          <h3 class="text-xl font-bold mb-3">Eigene Evidenz. Aus echten Daten.</h3>
+          <p class="text-white/40 text-sm max-w-2xl mx-auto leading-relaxed">
+            SOMA_CODE sammelt anonymisierte Nutzungsdaten (nur mit explizitem Opt-In) zur
+            wissenschaftlichen Auswertung von Interventions-Wirksamkeit. Ziel: Eigene klinische
+            Korrelationsstudien basierend auf realen Anwendungsdaten der ersten 1.000 Nutzer.
+            Alle Daten werden über die Privacy Bridge anonymisiert — kein Name, kein Ort, kein Geburtsdatum
+            verlässt dein Gerät.
+          </p>
+          <div class="flex items-center justify-center gap-6 mt-6 text-xs font-mono text-white/30">
+            <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-cyan/30"></span>Opt-In Research</span>
+            <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-cyan/30"></span>Anonymisiert</span>
+            <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-cyan/30"></span>DSGVO-konform</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ============================================================ -->
+  <!-- FINAL CTA -->
+  <!-- ============================================================ -->
+  <section class="py-24 sm:py-32 relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-cyan/5 blur-[150px] pointer-events-none"></div>
+    </div>
+
+    <div class="relative z-10 max-w-3xl mx-auto px-4 text-center reveal">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
+        Dein Körper ist kein Lifestyle.<br/>
+        <span class="gradient-text">Er ist ein System.</span>
+      </h2>
+      <p class="text-white/50 mb-10 text-lg">
+        Zeit, ihn wie eines zu behandeln.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#" class="cta-button px-10 py-4 rounded-xl text-base font-mono inline-flex items-center gap-3">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          App Store
+        </a>
+        <a href="#" class="cta-button-outline px-10 py-4 rounded-xl text-base font-mono inline-flex items-center gap-3">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.807 1.626a1 1 0 010 1.732l-2.807 1.626L15.206 12l2.492-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/></svg>
+          Google Play
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- FOOTER -->
+  <!-- ============================================================ -->
+  <footer class="border-t border-darkBorder py-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <!-- Brand -->
+        <div>
+          <a href="#" class="font-mono font-bold text-lg tracking-wider">
+            <span class="text-cyan">SOMA</span><span class="text-white/60">_</span><span class="text-white">CODE</span>
+          </a>
+          <p class="text-white/30 text-xs mt-3 leading-relaxed">
+            HUMAN OS V3.4.0<br/>
+            Neurobiologie trifft KI.<br/>
+            Local-First. Immer.
+          </p>
+        </div>
+        <!-- Legal -->
+        <div>
+          <h5 class="font-mono text-xs text-white/50 tracking-widest uppercase mb-4">Legal</h5>
+          <ul class="space-y-2 text-sm text-white/30">
+            <li><a href="privacy.html" class="hover:text-cyan transition-colors">Privacy Policy</a></li>
+            <li><a href="eula.html" class="hover:text-cyan transition-colors">EULA / Nutzungsbedingungen</a></li>
+            <li><a href="impressum.html" class="hover:text-cyan transition-colors">Impressum</a></li>
+          </ul>
+        </div>
+        <!-- Support -->
+        <div>
+          <h5 class="font-mono text-xs text-white/50 tracking-widest uppercase mb-4">Support</h5>
+          <ul class="space-y-2 text-sm text-white/30">
+            <li><a href="mailto:support@somacode.app" class="hover:text-cyan transition-colors">support@somacode.app</a></li>
+            <li><a href="#" class="hover:text-cyan transition-colors">FAQ</a></li>
+          </ul>
+        </div>
+        <!-- Social -->
+        <div>
+          <h5 class="font-mono text-xs text-white/50 tracking-widest uppercase mb-4">Connect</h5>
+          <ul class="space-y-2 text-sm text-white/30">
+            <li><a href="#" class="hover:text-cyan transition-colors">Instagram</a></li>
+            <li><a href="#" class="hover:text-cyan transition-colors">TikTok</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Compliance Disclaimer -->
+      <div class="border-t border-white/5 pt-8">
+        <p class="text-white/20 text-xs text-center leading-relaxed max-w-3xl mx-auto">
+          SOMA_CODE ist ein Tool zur Selbstreflexion und Lebensstil-Optimierung.
+          Es stellt keine medizinischen Diagnosen und ersetzt keinen Arztbesuch.
+          <span class="text-white/30 font-semibold">Not a medical device.</span>
+          Die in der App dargestellten Korrelationen basieren auf wissenschaftlicher Forschung und dienen
+          ausschließlich der Information und Selbsterkenntnis. Bei gesundheitlichen Beschwerden
+          konsultieren Sie bitte einen qualifizierten Arzt oder Therapeuten.
+        </p>
+        <p class="text-white/10 text-xs text-center mt-4 font-mono">
+          &copy; 2026 SOMA_CODE. Alle Rechte vorbehalten.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================ -->
+  <!-- SCROLL REVEAL SCRIPT -->
+  <!-- ============================================================ -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const reveals = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.15 });
+      reveals.forEach(el => observer.observe(el));
+    });
+  </script>
+
+</body>
+</html>
