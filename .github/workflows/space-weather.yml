@@ -1,4 +1,4 @@
-name: Space Weather Data Update
+name: Space Weather Update
 
 on:
   schedule:
@@ -9,26 +9,52 @@ permissions:
   contents: write
 
 jobs:
-  fetch-space-weather:
+  update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch and Generate
+
+      - name: Fetch data
         run: |
-          KP=$(curl -sf --max-time 15 "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json" || echo "[]")
-          KV=$(echo "$KP" | python3 -c "import json,sys;d=json.load(sys.stdin);print(d[-1][1] if len(d)>1 else '2.0')" 2>/dev/null || echo "2.0")
-          KT=$(echo "$KP" | python3 -c "import json,sys;d=json.load(sys.stdin);print(d[-1][0] if len(d)>1 else 'unknown')" 2>/dev/null || echo "unknown")
-          SC=$(python3 -c "import datetime,math;h=datetime.datetime.utcnow().hour;k=float('$KV') if '$KV' not in ['','null'] else 2.0;f=round(7.83+0.08*math.sin(2*math.pi*h/24)+0.003*k,2);p=round(1.0+0.3*max(0,k-3),2);print(f'{f}|{p}|{str(p>2.0).lower()}')")
-          SF=$(echo $SC|cut -d'|' -f1);SP=$(echo $SC|cut -d'|' -f2);SS=$(echo $SC|cut -d'|' -f3)
-          NOW=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
-          printf '{"updated_at":"%s","source":"NOAA SWPC + SOMA_CODE Estimation","kp_index":{"value":%s,"measured_at":"%s","source":"NOAA"},"schumann":{"frequency_hz":%s,"power":%s,"spike_detected":%s,"source":"Estimation"},"solar":{"r_scale":0,"xray_flux":0}}' "$NOW" "$KV" "$KT" "$SF" "$SP" "$SS" > space-weather.json
-          cat space-weather.json
+          python3 << 'PYEOF'
+          import urllib.request, json, datetime, math
+
+          # KP-Index von NOAA
+          kp_val = 2.0
+          kp_time = "unknown"
+          try:
+              req = urllib.request.urlopen("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json", timeout=15)
+              data = json.loads(req.read())
+              if len(data) > 1:
+                  kp_val = float(data[-1][1])
+                  kp_time = data[-1][0]
+          except Exception as e:
+              print(f"KP fetch failed: {e}")
+
+          # Schumann Schaetzung
+          hour = datetime.datetime.utcnow().hour
+          time_var = 0.08 * math.sin(2 * math.pi * hour / 24)
+          freq = round(7.83 + time_var + 0.003 * kp_val, 2)
+          power = round(1.0 + 0.3 * max(0, kp_val - 3), 2)
+          spike = power > 2.0
+
+          result = {
+              "updated_at": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+              "source": "NOAA SWPC + SOMA_CODE Estimation",
+              "kp_index": {"value": kp_val, "measured_at": kp_time, "source": "NOAA"},
+              "schumann": {"frequency_hz": freq, "power": power, "spike_detected": spike, "source": "Estimation"},
+              "solar": {"r_scale": 0, "xray_flux": 0}
+          }
+
+          with open("space-weather.json", "w") as f:
+              json.dump(result, f, indent=2)
+
+          print(json.dumps(result, indent=2))
+          PYEOF
+
       - name: Commit
         run: |
           git config user.name "SOMA_CODE Bot"
           git config user.email "bot@somacode.at"
           git add space-weather.json
-          git diff --cached --quiet || (git commit -m "sw: $(date -u '+%H:%M') UTC" && git push)
-```
-
-
+          git diff --cached --quiet || (git commit -m "space-weather update" && git push)
