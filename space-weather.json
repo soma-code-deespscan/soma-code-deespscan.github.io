@@ -1,16 +1,16 @@
 {
-  "updated_at": "2026-04-03T20:00:00Z",
+  "updated_at": "2026-04-03T22:53:03Z",
   "source": "NOAA SWPC + SOMA_CODE Estimation",
   "kp_index": {
     "value": 2.0,
-    "measured_at": "2026-04-03T18:00:00Z",
-    "source": "NOAA Planetary K-Index"
+    "measured_at": "unknown",
+    "source": "NOAA"
   },
   "schumann": {
-    "frequency_hz": 7.85,
+    "frequency_hz": 7.8,
     "power": 1.0,
     "spike_detected": false,
-    "source": "SOMA_CODE Estimation (Baseline + KP-Korrelation)"
+    "source": "Estimation"
   },
   "solar": {
     "r_scale": 0,
