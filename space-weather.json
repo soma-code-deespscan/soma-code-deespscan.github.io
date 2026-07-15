@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-15T10:14:39Z",
+  "updated_at": "2026-07-15T11:48:50Z",
   "source": "NOAA SWPC + SOMA_CODE Estimation",
   "kp_index": {
     "value": 2.0,
@@ -7,7 +7,7 @@
     "source": "NOAA"
   },
   "schumann": {
-    "frequency_hz": 7.88,
+    "frequency_hz": 7.86,
     "power": 1.0,
     "spike_detected": false,
     "source": "Estimation"
